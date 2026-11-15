@@ -50,7 +50,7 @@
 /* ATI Multipliers / Dividers */
 /* Memory Map Position 0x117A - 0x1195 */
 #define TP_ATI_MULTDIV_L                         0x21
-#define TP_ATI_MULTDIV_H                         0x4D
+#define TP_ATI_MULTDIV_H                         0x4B
 #define ALP_ATI_COARSE_RX0_L                     0x84
 #define ALP_ATI_COARSE_RX0_H                     0x56
 #define ALP_ATI_COARSE_RX1_L                     0x84
@@ -80,8 +80,8 @@
 
 /* ATI Settings */
 /* Memory Map Position 0x1196 - 0x11A1 */
-#define TP_ATI_TARGET_0                          0xBC
-#define TP_ATI_TARGET_1                          0x02
+#define TP_ATI_TARGET_0                          0xF4
+#define TP_ATI_TARGET_1                          0x01
 #define ALP_ATI_TARGET_0                         0x2C
 #define ALP_ATI_TARGET_1                         0x01
 #define ALP_BASE_TARGET_0                        0x64
@@ -146,8 +146,8 @@
 
 /* Thresholds and Debounce Settings */
 /* Memory Map Position 0x11CC - 0x11D3 */
-#define TRACKPAD_TOUCH_SET_THRESHOLD             0x7D
-#define TRACKPAD_TOUCH_CLEAR_THRESHOLD           0x78
+#define TRACKPAD_TOUCH_SET_THRESHOLD             0x4D
+#define TRACKPAD_TOUCH_CLEAR_THRESHOLD           0x46
 #define ALP_THRESHOLD                            0x14
 #define ALP_AUTOPROX_THRESHOLD                   0x7F
 #define ALP_SET_DEBOUNCE                         0x02
@@ -177,7 +177,7 @@
 
 /* Trackpad Settings */
 /* Memory Map Position 0x11E2 - 0x11F5 */
-#define TRACKPAD_SETTINGS_0_0                    0x28
+#define TRACKPAD_SETTINGS_0_0                    0x38
 #define TRACKPAD_SETTINGS_0_1                    0x12
 #define TRACKPAD_SETTINGS_1_0                    0x0C
 #define TRACKPAD_SETTINGS_1_1                    0x04
