@@ -28,6 +28,7 @@
 #include <stdint.h>
 
 #include <iqs915x.h>
+#include <iqs915x_base_count.h>
 #include <iqs915x_processing_math.h>
 #include "iqs915x_scroll_motion.h"
 #include "iqs915x_contacts_internal.h"
@@ -181,6 +182,7 @@
 
 // System Control (2 bytes)
 // 注意: ACK Resetは Bit 7 で行う
+#define IQS915X_TP_ATI_TARGET 0x1196
 #define IQS915X_SYSTEM_CONTROL 0x11BC
 // System Control ビットフラグ
 #define IQS915X_MODE_SELECT_MASK 0x0007 // Bit 2-0: モード選択
@@ -526,7 +528,9 @@ struct iqs915x_data
     atomic_t ati_error;
     atomic_t ati_sequence;
     atomic_t channel_pending, channel_running;
-    atomic_t diagnostic_job; /* 1 capture, 2 ATI then capture */
+    atomic_t diagnostic_job; /* 1 capture, 2 ATI then capture, 3 Base Count */
+    struct iqs915x_base_count base_count;
+    bool (*base_permitted)(void);
     atomic_t channel_auto_attempted;
     uint32_t channel_requested_generation;
     struct k_mutex channel_lock;

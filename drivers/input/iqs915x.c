@@ -960,10 +960,15 @@ static void iqs915x_configure_swipe_thresholds(const struct iqs915x_config *conf
 
 #include "iqs915x_fault_diagnostics.inc"
 
+#define IQS915X_DIAG_BASE_COUNT 3
+
 static void iqs915x_channels_cancel_pending(struct iqs915x_data *d) {
   if(atomic_cas(&d->channel_pending,1,0)) {
     k_mutex_lock(&d->channel_lock,K_FOREVER);
-    d->channel_snapshot.status=-ECANCELED;
+    if (atomic_get(&d->diagnostic_job) == IQS915X_DIAG_BASE_COUNT) {
+      d->base_count.status = -ECANCELED;
+      d->base_count.ended_ms = k_uptime_get_32();
+    } else d->channel_snapshot.status=-ECANCELED;
     atomic_clear(&d->diagnostic_job);
     k_mutex_unlock(&d->channel_lock);
   }
@@ -2938,6 +2943,7 @@ static void iqs915x_apply_pending_power_request(struct iqs915x_data *data)
 static void
 iqs915x_apply_pending_power_request(struct iqs915x_data *data);
 #include "iqs915x_channel_diagnostics.inc"
+#include "iqs915x_base_count.inc"
 
 /* ============================================================
  * メインスレッド
@@ -3030,7 +3036,9 @@ static void iqs915x_thread_main(void *p1, void *p2, void *p3)
 
     iqs915x_channels_auto_request(data);
     if (atomic_cas(&data->channel_pending, 1, 0)) {
-      if (atomic_get(&data->diagnostic_job)) iqs915x_diagnostic_execute(data);
+      if (atomic_get(&data->diagnostic_job) == IQS915X_DIAG_BASE_COUNT)
+        iqs915x_base_count_execute(data);
+      else if (atomic_get(&data->diagnostic_job)) iqs915x_diagnostic_execute(data);
       else iqs915x_channels_capture_pending(data);
       data->ati_assist_state = 0;
       data->ati_assist_due = 0;
@@ -3642,6 +3650,7 @@ static int iqs915x_init(const struct device *dev)
   k_mutex_init(&data->channel_lock);
   data->channel_snapshot.id=k_cycle_get_32();
   data->channel_snapshot.status=-ENODATA;
+  data->base_count.status = data->base_count.restore_status = -ENODATA;
   data->init_deadline = k_uptime_get() + IQS915X_INIT_TOTAL_TIMEOUT_MS;
   atomic_set(&data->lifecycle, IQS915X_PROBING);
   atomic_set(&data->mode_transitioning, 1);
