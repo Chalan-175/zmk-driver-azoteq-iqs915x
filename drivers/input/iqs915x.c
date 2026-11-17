@@ -31,6 +31,7 @@
 
 #include <dt-bindings/input/iqs915x_gestures.h>
 #include <iqs915x.h>
+#include <iqs915x_count_reference.h>
 #include "iqs915x_internal.h"
 #include "iqs915x_power.h"
 #include "iqs915x_init_array.h"
@@ -489,6 +490,33 @@ static int iqs915x_read_block(const struct device *dev, uint16_t reg,
   int ret = i2c_write_read_dt(&config->i2c, reg_addr, sizeof(reg_addr), data, len);
   ((struct iqs915x_data *)dev->data)->comm_completed_ms = k_uptime_get();
   return ret;
+}
+
+__weak int64_t iqs915x_count_plan(const struct device *dev, uint32_t generation,
+                                  uint32_t ati_sequence, struct iqs915x_count_request *request)
+{
+  return INT64_MAX;
+}
+
+__weak void iqs915x_count_result(const struct device *dev,
+                                 const struct iqs915x_count_request *request,
+                                 uint32_t started_ms, uint32_t ended_ms, int error,
+                                 const uint8_t *little_endian)
+{
+}
+
+static void iqs915x_read_count_reference(struct iqs915x_data *data,
+                                         const struct iqs915x_count_request *request)
+{
+  uint8_t bytes[2 * IQS915X_COUNT_BLOCK_MAX];
+  uint32_t started = k_uptime_get_32();
+  int error = -EINVAL;
+  if (request->count && request->count <= IQS915X_COUNT_BLOCK_MAX &&
+      (unsigned)request->offset + request->count <= IQS915X_CHANNEL_COUNT) {
+    uint16_t base = request->reference ? 0xb000 : 0xa000;
+    error = iqs915x_read_block(data->dev, base + 2 * request->offset, bytes, 2 * request->count);
+  }
+  iqs915x_count_result(data->dev, request, started, k_uptime_get_32(), error, bytes);
 }
 
 /* ============================================================
@@ -3053,6 +3081,20 @@ static void iqs915x_thread_main(void *p1, void *p2, void *p3)
     int64_t contact_deadline = iqs915x_contact_refresh_deadline(data);
     deadline = MIN(deadline, contact_deadline);
     bool forced_contact = iqs915x_contact_probe_required(data);
+    struct iqs915x_count_request count_request;
+    if (data->confirmed_mode == IQS915X_MODE_ACTIVE && iqs915x_output_is_enabled(data)) {
+      int64_t count_due = iqs915x_count_plan(dev, frame_generation, atomic_get(&data->ati_sequence),
+                                            &count_request);
+      int64_t now = k_uptime_get();
+      if (!forced_contact && now < contact_deadline && count_due <= now &&
+          now > data->comm_completed_ms &&
+          iqs915x_wait_window(data, true, INT64_MAX)) {
+        iqs915x_read_count_reference(data, &count_request);
+        continue;
+      }
+      if (!forced_contact && now < contact_deadline && count_due != INT64_MAX)
+        deadline = MIN(deadline, MAX(count_due, data->comm_completed_ms + 1));
+    }
     bool window = iqs915x_wait_window(data, forced_contact, deadline);
     if (!window && contact_deadline != INT64_MAX && k_uptime_get() >= contact_deadline)
     {
