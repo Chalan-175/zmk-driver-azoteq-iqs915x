@@ -10,24 +10,24 @@
 
 /* ALP ATI Compensation */
 /* Memory Map Position 0x115C - 0x1175 */
-#define ALP_COMPENSATION_RX0_0                   0xF5
-#define ALP_COMPENSATION_RX0_1                   0x2A
-#define ALP_COMPENSATION_RX1_0                   0x09
-#define ALP_COMPENSATION_RX1_1                   0x2F
-#define ALP_COMPENSATION_RX2_0                   0xF9
-#define ALP_COMPENSATION_RX2_1                   0x2A
-#define ALP_COMPENSATION_RX3_0                   0x1B
-#define ALP_COMPENSATION_RX3_1                   0x2F
-#define ALP_COMPENSATION_RX4_0                   0xE5
-#define ALP_COMPENSATION_RX4_1                   0x2A
-#define ALP_COMPENSATION_RX5_0                   0xED
-#define ALP_COMPENSATION_RX5_1                   0x2A
-#define ALP_COMPENSATION_RX6_0                   0x1E
-#define ALP_COMPENSATION_RX6_1                   0x2F
-#define ALP_COMPENSATION_RX7_0                   0x1D
-#define ALP_COMPENSATION_RX7_1                   0x2F
-#define ALP_COMPENSATION_RX8_0                   0x09
-#define ALP_COMPENSATION_RX8_1                   0x2F
+#define ALP_COMPENSATION_RX0_0                   0xCF
+#define ALP_COMPENSATION_RX0_1                   0x22
+#define ALP_COMPENSATION_RX1_0                   0xF9
+#define ALP_COMPENSATION_RX1_1                   0x26
+#define ALP_COMPENSATION_RX2_0                   0xD3
+#define ALP_COMPENSATION_RX2_1                   0x22
+#define ALP_COMPENSATION_RX3_0                   0x0C
+#define ALP_COMPENSATION_RX3_1                   0x27
+#define ALP_COMPENSATION_RX4_0                   0x1B
+#define ALP_COMPENSATION_RX4_1                   0x27
+#define ALP_COMPENSATION_RX5_0                   0x20
+#define ALP_COMPENSATION_RX5_1                   0x27
+#define ALP_COMPENSATION_RX6_0                   0x0E
+#define ALP_COMPENSATION_RX6_1                   0x27
+#define ALP_COMPENSATION_RX7_0                   0x0A
+#define ALP_COMPENSATION_RX7_1                   0x27
+#define ALP_COMPENSATION_RX8_0                   0xF8
+#define ALP_COMPENSATION_RX8_1                   0x26
 #define ALP_COMPENSATION_RX9_0                   0xFF
 #define ALP_COMPENSATION_RX9_1                   0x03
 #define ALP_COMPENSATION_RX10_0                  0xFF
@@ -82,7 +82,7 @@
 /* Memory Map Position 0x1196 - 0x11A1 */
 #define TP_ATI_TARGET_0                          0xF4
 #define TP_ATI_TARGET_1                          0x01
-#define ALP_ATI_TARGET_0                         0x2C
+#define ALP_ATI_TARGET_0                         0xF4
 #define ALP_ATI_TARGET_1                         0x01
 #define ALP_BASE_TARGET_0                        0x64
 #define ALP_BASE_TARGET_1                        0x00
