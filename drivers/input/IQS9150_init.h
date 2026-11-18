@@ -148,7 +148,7 @@
 /* Memory Map Position 0x11CC - 0x11D3 */
 #define TRACKPAD_TOUCH_SET_THRESHOLD             0x2D
 #define TRACKPAD_TOUCH_CLEAR_THRESHOLD           0x25
-#define ALP_THRESHOLD                            0x0C
+#define ALP_THRESHOLD                            0x0A
 #define ALP_AUTOPROX_THRESHOLD                   0x7F
 #define ALP_SET_DEBOUNCE                         0x02
 #define ALP_CLEAR_DEBOUNCE                       0x02
