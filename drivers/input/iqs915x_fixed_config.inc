@@ -21,6 +21,7 @@ static int iqs915x_check_fixed_sensor_config(const struct device *dev,
 
   static const uint16_t registers[] = {
     IQS915X_TRACKPAD_SETTINGS,
+    0x11CC, /* Trackpad Touch Set/Clear multipliers. */
     IQS915X_ACTIVE_MODE_REPORT_RATE,
     IQS915X_LP2_MODE_REPORT_RATE,
     IQS915X_OTHER_SETTINGS,
